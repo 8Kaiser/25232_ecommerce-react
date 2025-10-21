@@ -1,12 +1,22 @@
-# React + Vite
+# 🛍️ Ecommerce JPK
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Proyecto de **eCommerce** desarrollado por **Juan Pablo Kaiser** como parte del curso *React Comisión 25232 – Talento Tech*.  
+Permite visualizar productos, ver detalles y simular compras. Los datos provienen de **MockAPI**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Tecnologías utilizadas
+- **React + Vite**
+- **React Router DOM**
+- **MockAPI**
+- **CSS / Tailwind / Bootstrap** (según tu implementación)
+- **Git & GitHub**
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ⚙️ Instalación y ejecución
+
+1. Clonar este repositorio:
+   ```bash
+   git clone https://github.com/8Kaiser/25232_ecommerce-react
+
