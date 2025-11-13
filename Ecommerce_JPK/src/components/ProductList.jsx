@@ -42,8 +42,8 @@ export default function ProductList({ onAdd }) {
         return (
           <li key={id} className="product">
             {/* Card clickeable al detalle */}
-            <Link to={`/item/${p.id}`} className="product-link">
-
+            <Link to={`/productos/${p.id}`} className="product-link">
+            
               {p.image && <img src={p.image} alt={p.name} width={120} />}
               <h4>{p.name}</h4>
             </Link>

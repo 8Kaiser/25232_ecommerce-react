@@ -1,4 +1,7 @@
 import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./auth/ProtectedRoute";
+import Login from "./pages/Login";
+import Admin from "./pages/Admin";
 import ProductList from "./components/ProductList";
 import Cart from "./components/Cart";
 import Header from "./components/Header";
@@ -9,6 +12,8 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import { useState } from "react";
 import './App.css';
+
+
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
@@ -83,9 +88,42 @@ function App() {
             </div>
           }
         />
-        <Route path="/item/:id" element={<ItemDetailContainer />} />
+        <Route path="/productos/:id" element={<ItemDetailContainer />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        
+
+        {/* RUTAS PROTEGIDAS */}
+        <Route
+          path="/carrito"
+          element={
+            <ProtectedRoute>
+      <Cart
+        items={cartItems}
+        total={total}
+        onInc={handleInc}
+        onDec={handleDec}
+        onRemove={handleRemove}
+        onClear={handleClear}
+      />
+    </ProtectedRoute>
+  }
+/>
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Admin />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Login */}
+        <Route path="/login" element={<Login />} />
+
+        {/* 404 simple (opcional) */}
+        <Route path="*" element={<div style={{padding:24}}>No encontrado</div>} />
       </Routes>
       <Footer />
     </>
