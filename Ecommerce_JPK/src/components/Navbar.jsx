@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../auth/AuthContext"; // ← ajusta el path según tu estructura
+import { useAuth } from "../auth/AuthContext";
 
 export default function Navbar({ cartCount = 0 }) {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return (
     <nav className="navbar">
@@ -12,13 +12,11 @@ export default function Navbar({ cartCount = 0 }) {
       <Link to="/contact">Contact</Link>
       <Link to="/carrito">Carrito ({cartCount})</Link>
 
-      <span style={{ marginLeft: "auto" }}>
-        {isAuthenticated ? (
-          <button onClick={logout}>Cerrar sesión</button>
-        ) : (
-          <Link to="/login">Iniciar sesión</Link>
-        )}
-      </span>
+      {isAuthenticated && (
+        <Link to="/admin" style={{ marginLeft: "16px" }}>
+          Admin
+        </Link>
+      )}
     </nav>
   );
 }

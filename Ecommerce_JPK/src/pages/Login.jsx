@@ -6,11 +6,13 @@ export default function Login() {
   const { isAuthenticated, login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // ⬅️ importante: calculamos "from" ANTES de la redirección
   const from = location.state?.from?.pathname || "/";
 
-  // Si ya está logueado → no puede ver /login
+  // 👇 si ya estoy autenticado, voy a donde venía, o a "/" por defecto
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={from} replace />;
   }
 
   const [username, setUsername] = useState("");
@@ -28,6 +30,7 @@ export default function Login() {
     }
 
     setError("");
+    // si vengo de una ruta protegida → vuelvo ahí (admin, carrito, etc.)
     navigate(from, { replace: true });
   };
 

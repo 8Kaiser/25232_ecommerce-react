@@ -1,18 +1,58 @@
+// src/pages/Admin.jsx
+import { useState } from "react";
+import { useProducts } from "../context/ProductsContext";
+import ProductForm from "../components/ProductForm";
+
 export default function Admin() {
-    return (
-      <div style={{ padding: 24 }}>
-        <h2>Panel de Administración</h2>
-        <p>Bienvenido al área privada del sistema.</p>
-  
-        <section style={{ marginTop: 16 }}>
-          <h3>Resumen rápido</h3>
+  const { products, eliminarProducto } = useProducts();
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+
+  const handleEditarClick = (producto) => {
+    setProductoSeleccionado(producto);
+  };
+
+  const handleFinishForm = () => {
+    setProductoSeleccionado(null);
+  };
+
+  return (
+    <div style={{ padding: 24 }}>
+      <h1>Panel de administración</h1>
+
+      {/* Formulario agregar/editar */}
+      <ProductForm
+        productoSeleccionado={productoSeleccionado}
+        onFinish={handleFinishForm}
+      />
+
+      {/* Lista de productos para editar / eliminar */}
+      <section style={{ marginTop: 32 }}>
+        <h2>Productos existentes</h2>
+
+        {products.length === 0 ? (
+          <p>No hay productos cargados.</p>
+        ) : (
           <ul>
-            <li>Total de productos activos: 5</li>
-            <li>Ventas del mes: $1.250.000</li>
-            <li>Usuarios registrados: 12</li>
+            {products.map((p) => (
+              <li key={p.id} style={{ marginBottom: 8 }}>
+                <strong>{p.name}</strong> — ${Number(p.price).toLocaleString()}
+                <button
+                  style={{ marginLeft: 8 }}
+                  onClick={() => handleEditarClick(p)}
+                >
+                  Editar
+                </button>
+                <button
+                  style={{ marginLeft: 8 }}
+                  onClick={() => eliminarProducto(p.id)}
+                >
+                  Eliminar
+                </button>
+              </li>
+            ))}
           </ul>
-        </section>
-      </div>
-    );
-  }
-  
+        )}
+      </section>
+    </div>
+  );
+}

@@ -52,7 +52,8 @@ function App() {
   );
 
   return (
-    <>
+    
+    <><div className="page-container">
       <Header />
       <Navbar cartCount={cartItems.length} />
       <Routes>
@@ -108,6 +109,7 @@ function App() {
       />
     </ProtectedRoute>
   }
+  
 />
 
         <Route
@@ -126,6 +128,7 @@ function App() {
         <Route path="*" element={<div style={{padding:24}}>No encontrado</div>} />
       </Routes>
       <Footer />
+      </div>
     </>
   );
 }

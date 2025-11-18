@@ -1,48 +1,48 @@
 // src/components/Cart.jsx
+
 export default function Cart({
   items = [],
   total = 0,
   onInc,
   onDec,
   onRemove,
-  onClear,
+  onClear
 }) {
-  if (items.length === 0) return <p>El carrito está vacío</p>;
-
   return (
-    <div>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {items.map((item) => (
-          <li
-            key={item.id}
-            style={{
-              marginBottom: 10,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            <span style={{ flex: 1 }}>
-              <strong>{item.name}</strong> — ${Number(item.price).toFixed(2)} ×{" "}
-              {item.qty}
-            </span>
-            <div>
-              <button onClick={() => onDec(item.id)}>-</button>
-              <button onClick={() => onInc(item.id)} style={{ margin: "0 6px" }}>
-                +
-              </button>
-              <button onClick={() => onRemove(item.id)} style={{ marginRight: 6 }}>
-                Eliminar
-              </button>
+    <div className="cart-wrapper">
+      
+      <div className="cart-panel">
+        <h2>Carrito de compras</h2>
+
+        {items.length === 0 ? (
+          <p>El carrito está vacío</p>
+        ) : (
+          <>
+            {items.map((item) => (
+              <div key={item.id} className="cart-item">
+                <img src={item.image} alt={item.name} />
+
+                <h3>{item.name}</h3>
+                <p>
+                  ${item.price.toLocaleString()} × {item.qty}
+                </p>
+
+                <div style={{ marginTop: "8px" }}>
+                  <button onClick={() => onDec(item.id)}>-</button>
+                  <button onClick={() => onInc(item.id)}>+</button>
+                  <button onClick={() => onRemove(item.id)}>Eliminar</button>
+                </div>
+              </div>
+            ))}
+
+            <div className="cart-total">
+              Total: ${total.toLocaleString()}
             </div>
-          </li>
-        ))}
-      </ul>
-      <hr />
-      <p>
-        <strong>Total: ${Number(total).toFixed(2)}</strong>
-      </p>
-      <button onClick={onClear}>Vaciar carrito</button>
+
+            <button onClick={onClear}>Vaciar carrito</button>
+          </>
+        )}
+      </div>
     </div>
   );
 }

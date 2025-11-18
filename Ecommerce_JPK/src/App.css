@@ -28,8 +28,51 @@ header, footer { padding: 12px 0; }
   transition: color 0.2s;
 }
 
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+
 .navbar a:hover {
   color: #00bfff;
+}
+
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 0.5rem 0;
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    text-align: center;
+    background: #111; /* estilo menú mobile */
+    padding: 1rem 0;
+    gap: 1.2rem;
+  }
+
+  .navbar a {
+    font-size: 1.1rem;
+    padding: 0.4rem 0;
+    color: #ccc;
+  }
+
+  .navbar a:hover {
+    color: #00eaff;
+  }
 }
 
 /* ======== PRODUCT LIST ======== */
@@ -98,4 +141,19 @@ button:hover {
   object-fit: cover;
   border-radius: 6px;
   margin-bottom: 20px;
+}
+
+/* Contenedor global para evitar que todo se expanda más allá del ancho */
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem;
 }
