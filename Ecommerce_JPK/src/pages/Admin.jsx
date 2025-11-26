@@ -2,9 +2,11 @@
 import { useState } from "react";
 import { useProducts } from "../context/ProductsContext";
 import ProductForm from "../components/ProductForm";
+import { useAuth } from "../auth/AuthContext";
 
 export default function Admin() {
   const { products, eliminarProducto } = useProducts();
+  const { logout } = useAuth(); // ⬅ Necesario para cerrar sesión del admin
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
 
   const handleEditarClick = (producto) => {
@@ -18,6 +20,22 @@ export default function Admin() {
   return (
     <div style={{ padding: 24 }}>
       <h1>Panel de administración</h1>
+
+      {/* Botón para cerrar sesión SOLO en admin */}
+      <button 
+        onClick={logout}
+        style={{
+          padding: "8px 16px",
+          background: "#ff4444",
+          border: "none",
+          color: "white",
+          cursor: "pointer",
+          borderRadius: "4px",
+          marginBottom: "20px"
+        }}
+      >
+        Cerrar sesión
+      </button>
 
       {/* Formulario agregar/editar */}
       <ProductForm

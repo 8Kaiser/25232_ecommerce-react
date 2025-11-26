@@ -37,7 +37,7 @@ export function ProductsProvider({ children }) {
     fetchProducts();
   }, []);
 
-  // 👉 AGREGAR producto (POST)
+  // AGREGAR producto (POST)
   const agregarProducto = async (productoNuevo) => {
     try {
       const res = await fetch(API_URL, {
