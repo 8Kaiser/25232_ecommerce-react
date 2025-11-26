@@ -7,13 +7,11 @@ import Cart from "./components/Cart";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
-import ItemDetailContainer from "./components/ItemDetailContainer"; // ⬅ Asegúrate que este exista
+import ItemDetailContainer from "./components/ItemDetailContainer";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import { useState } from "react";
-import './App.css';
-
-
+import "./App.css";
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
@@ -52,16 +50,58 @@ function App() {
   );
 
   return (
-    
-    <><div className="page-container">
-      <Header />
-      <Navbar cartCount={cartItems.length} />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div style={{ display: "flex", gap: "40px" }}>
-              <ProductList onAdd={handleAdd} />
+    <>
+      <div className="page-container">
+        <Header />
+        <Navbar cartCount={cartItems.length} />
+
+        <Routes>
+          {/* HOME */}
+          <Route
+            path="/"
+            element={
+              <div style={{ display: "flex", gap: "40px" }}>
+                <ProductList onAdd={handleAdd} />
+                <Cart
+                  items={cartItems}
+                  total={total}
+                  onInc={handleInc}
+                  onDec={handleDec}
+                  onRemove={handleRemove}
+                  onClear={handleClear}
+                />
+              </div>
+            }
+          />
+
+          {/* PRODUCTOS */}
+          <Route
+            path="/productos"
+            element={
+              <div style={{ display: "flex", gap: "40px" }}>
+                <ProductList onAdd={handleAdd} />
+                <Cart
+                  items={cartItems}
+                  total={total}
+                  onInc={handleInc}
+                  onDec={handleDec}
+                  onRemove={handleRemove}
+                  onClear={handleClear}
+                />
+              </div>
+            }
+          />
+
+          <Route path="/productos/:id" element={<ItemDetailContainer />} />
+
+          {/* OTRAS RUTAS */}
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+
+          {/* CARRITO PÚBLICO */}
+          <Route
+            path="/carrito"
+            element={
               <Cart
                 items={cartItems}
                 total={total}
@@ -70,64 +110,30 @@ function App() {
                 onRemove={handleRemove}
                 onClear={handleClear}
               />
-            </div>
-          }
-        />
-        <Route
-          path="/productos"
-          element={
-            <div style={{ display: "flex", gap: "40px" }}>
-              <ProductList onAdd={handleAdd} />
-              <Cart
-                items={cartItems}
-                total={total}
-                onInc={handleInc}
-                onDec={handleDec}
-                onRemove={handleRemove}
-                onClear={handleClear}
-              />
-            </div>
-          }
-        />
-        <Route path="/productos/:id" element={<ItemDetailContainer />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        
+            }
+          />
 
-        {/* RUTAS PROTEGIDAS */}
-        <Route
-          path="/carrito"
-          element={
-            <ProtectedRoute>
-      <Cart
-        items={cartItems}
-        total={total}
-        onInc={handleInc}
-        onDec={handleDec}
-        onRemove={handleRemove}
-        onClear={handleClear}
-      />
-    </ProtectedRoute>
-  }
-  
-/>
+          {/* ADMIN PROTEGIDO */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <Admin />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <Admin />
-            </ProtectedRoute>
-          }
-        />
+          {/* LOGIN */}
+          <Route path="/login" element={<Login />} />
 
-        {/* Login */}
-        <Route path="/login" element={<Login />} />
+          {/* 404 */}
+          <Route
+            path="*"
+            element={<div style={{ padding: 24 }}>No encontrado</div>}
+          />
+        </Routes>
 
-        {/* 404 simple (opcional) */}
-        <Route path="*" element={<div style={{padding:24}}>No encontrado</div>} />
-      </Routes>
-      <Footer />
+        <Footer />
       </div>
     </>
   );
