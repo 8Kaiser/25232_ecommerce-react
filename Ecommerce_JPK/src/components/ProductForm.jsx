@@ -1,136 +1,146 @@
 // src/components/ProductForm.jsx
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { uploadToImgbb } from "../services/uploadImage";
 import { useProducts } from "../context/ProductsContext";
-
-const EMPTY_PRODUCT = {
-  name: "",
-  price: "",
-  description: "",
-  image: "",
-  stock: "",
-};
 
 export default function ProductForm({ productoSeleccionado, onFinish }) {
   const { agregarProducto, editarProducto } = useProducts();
-  const [producto, setProducto] = useState(EMPTY_PRODUCT);
-  const [errors, setErrors] = useState({});
 
-  const modoEdicion = Boolean(productoSeleccionado);
+  const [form, setForm] = useState({
+    name: "",
+    price: "",
+    stock: "",
+    description: "",
+    image: "",
+  });
 
-  // Cuando cambie el seleccionado, rellenar el form
+  const [file, setFile] = useState(null);
+
+  // 🟦 Cargar datos si estamos editando
   useEffect(() => {
     if (productoSeleccionado) {
-      setProducto(productoSeleccionado);
+      setForm({
+        name: productoSeleccionado.name || "",
+        price: productoSeleccionado.price || "",
+        stock: productoSeleccionado.stock || "",
+        description: productoSeleccionado.description || "",
+        image: productoSeleccionado.image || "",
+      });
     } else {
-      setProducto(EMPTY_PRODUCT);
+      setForm({
+        name: "",
+        price: "",
+        stock: "",
+        description: "",
+        image: "",
+      });
+      setFile(null);
     }
   }, [productoSeleccionado]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProducto((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // Validaciones según la consigna
-  const validar = () => {
-    const newErrors = {};
-
-    if (!producto.name.trim()) {
-      newErrors.name = "El nombre es obligatorio.";
-    }
-
-    if (!producto.price || Number(producto.price) <= 0) {
-      newErrors.price = "El precio debe ser mayor a 0.";
-    }
-
-    if (!producto.description || producto.description.length < 10) {
-      newErrors.description =
-        "La descripción debe tener al menos 10 caracteres.";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validar()) return;
+    try {
+      let finalImageUrl = form.image;
 
-    if (modoEdicion) {
-      await editarProducto(producto);
-    } else {
-      await agregarProducto(producto);
+      // 🟦 Si hay archivo seleccionado, subirlo a imgbb
+      if (file) {
+        finalImageUrl = await uploadToImgbb(file);
+      }
+
+      // Datos comunes (sin id)
+      const baseData = {
+        name: form.name,
+        price: form.price,
+        stock: form.stock,
+        description: form.description,
+        image: finalImageUrl,
+      };
+
+      if (productoSeleccionado) {
+        // 🟣 EDITAR: conservar id y demás campos originales
+        const productoFinal = {
+          ...productoSeleccionado, // acá viene el id
+          ...baseData,             // pisamos con lo editado
+        };
+
+        await editarProducto(productoFinal);
+      } else {
+        // 🟢 CREAR NUEVO
+        await agregarProducto(baseData);
+      }
+
+      alert("Producto guardado con éxito ✨");
+
+      // RESET GENERAL
+      setForm({
+        name: "",
+        price: "",
+        stock: "",
+        description: "",
+        image: "",
+      });
+      setFile(null);
+
+      onFinish?.();
+
+    } catch (err) {
+      console.error(err);
+      alert("❌ Error al guardar el producto");
     }
-
-    if (onFinish) onFinish(); // para limpiar selección en Admin
-    setProducto(EMPTY_PRODUCT);
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 400 }}>
-      <h2>{modoEdicion ? "Editar producto" : "Agregar producto"}</h2>
+    <form onSubmit={handleSubmit} style={{ marginBottom: 24 }}>
+      <h2>{productoSeleccionado ? "Editar producto" : "Agregar producto"}</h2>
 
-      <div>
-        <label>Nombre:</label>
-        <input
-          type="text"
-          name="name"
-          value={producto.name}
-          onChange={handleChange}
-          required
-        />
-        {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
-      </div>
+      <label>Nombre:</label>
+      <input
+        name="name"
+        value={form.name}
+        onChange={handleChange}
+        required
+      />
 
-      <div>
-        <label>Precio:</label>
-        <input
-          type="number"
-          name="price"
-          value={producto.price}
-          onChange={handleChange}
-          required
-          min="0"
-        />
-        {errors.price && <p style={{ color: "red" }}>{errors.price}</p>}
-      </div>
+      <label>Precio:</label>
+      <input
+        type="number"
+        name="price"
+        value={form.price}
+        onChange={handleChange}
+        required
+      />
 
-      <div>
-        <label>Stock:</label>
-        <input
-          type="number"
-          name="stock"
-          value={producto.stock}
-          onChange={handleChange}
-        />
-      </div>
+      <label>Stock:</label>
+      <input
+        type="number"
+        name="stock"
+        value={form.stock}
+        onChange={handleChange}
+        required
+      />
 
-      <div>
-        <label>Imagen (URL):</label>
-        <input
-          type="text"
-          name="image"
-          value={producto.image}
-          onChange={handleChange}
-        />
-      </div>
+      <label>Imagen:</label>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => setFile(e.target.files[0])}
+      />
 
-      <div>
-        <label>Descripción:</label>
-        <textarea
-          name="description"
-          value={producto.description}
-          onChange={handleChange}
-          required
-        />
-        {errors.description && (
-          <p style={{ color: "red" }}>{errors.description}</p>
-        )}
-      </div>
+      <label>Descripción:</label>
+      <textarea
+        name="description"
+        value={form.description}
+        onChange={handleChange}
+      />
 
       <button type="submit">
-        {modoEdicion ? "Actualizar producto" : "Crear producto"}
+        {productoSeleccionado ? "Guardar cambios" : "Crear producto"}
       </button>
     </form>
   );
