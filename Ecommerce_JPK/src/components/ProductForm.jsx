@@ -75,7 +75,7 @@ export default function ProductForm({ productoSeleccionado, onFinish }) {
         await agregarProducto(baseData);
       }
 
-      alert("Producto guardado con éxito ✨");
+      
 
       // RESET GENERAL
       setForm({
